@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>reduce 实现 pipe</title>
+</head>
+<body>
+  <script>
+  var pipe = (...functions)=> input =>functions.reduce((acc,fn)=> fn(acc),input)
+  
+  pipe = function(...functions){
+    return function(input){
+      return functions.reduce(function(acc,fn){
+        return fn(acc)
+      },input)
+    }
+  }
+  var f1 = x => {return x + 1}
+  var f2 = x =>{return x*2}
+  var result = pipe(f1,f2)(1)
+  console.log(result)
+
+  function compose(...funcs){
+    if(funcs.length === 0){
+      return arg => arg
+    }
+    if(funcs.length === 1){
+      return funcs[0]
+    }
+    return funcs.reduce((a,b)=>(...args)=>a(b(...args)))
+  }
+
+  var compose = function(...args){
+    let length = args.length
+    let count = length - 1
+    let result 
+    return function f1(...arg1){
+      result = args[count].apply(this,arg1)
+      if(count <=0){
+        count = length -1
+        return result
+      }
+      count--
+      return f1.call(null,result)
+    }
+  }
+  </script>
+</body>
+</html>

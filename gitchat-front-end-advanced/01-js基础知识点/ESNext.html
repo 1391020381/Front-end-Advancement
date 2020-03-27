@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESNext</title>
+</head>
+<body>
+   <script>
+
+       var  person = {
+ name: 'lucas',
+ getName: () => {
+   console.log(this.name)
+ }
+};
+person.getName()
+
+// 不适合箭头函数的地方
+
+// 构造函数的原型方法上
+// 需要获得 arguments 箭头函数不具有 arguments
+//  使用对象方法时
+// 使用动态回调
+   </script> 
+</body>
+</html>

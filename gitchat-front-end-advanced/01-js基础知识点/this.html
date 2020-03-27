@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>this</title>
+</head>
+<body>
+  <script>
+    // 全局环境下
+   function f1(){
+     console.log(this)
+   }
+   function f2(){
+     'use strict'
+     console.log(this)
+   }
+  f1() // window
+  f2() // undefined
+  var foo = {
+    bar:10,
+    fn:function(){
+      console.log(this)
+      console.log(this.bar)
+    }
+  }
+var fn1 = foo.fn   // function () {   console.log(this) console.log(this.bar)  }
+fn1() // window undefined
+foo.fn() // foo 10
+
+// 上下文对象调用中的this
+
+var student = {
+  name:'Lucas',
+  fn:function(){
+    return this
+  }
+}
+console.log('student:',student.fn(),student,student.fn() === student)
+var person = {
+  name:'Lucas',
+  brother:{
+    name:'Mike',
+    fn:function(){
+      return this.name
+    }
+  }
+}
+// 在这种嵌套的关系中, this   执向 最后调用它的对象。
+console.log('person:',person.brother.fn())
+
+var o1 = {
+  text:'o1',
+  fn:function(){
+    return this.text
+  }
+}
+var o2 = {
+  text:'o2',
+  fn:function(){
+    return o1.fn()
+  }
+}
+var o3 = {
+  text:'o3',
+  fn:function(){
+    var fn = o1.fn
+    return fn()
+  }
+}
+console.log('o1.fn:',o1.fn()) // o1
+console.log('o2.fn:',o2.fn()) // o1
+console.log('o3.fn:',o3.fn()) // undefined
+
+// 让 o2.fn 继续输出 o2
+var o2_1 = {
+  text:'o2_1',
+  fn:o1.fn
+}
+console.log('o2_1:',o2_1.fn())
+
+// bind call apply改变this 指向
+
+//  bind call apply 都是用来改变相关函数this的指向的, 但是call apply 是直接进行相关函数的调用
+// bind 不会执行相关的函数,而是返回一个新的函数,这个新的函数已经绑定了新的this指向,开发者需要手动调用即可
+
+var foo = {
+  name:'lucas',
+  logName:function(){
+    console.log(this.name)
+    return this.name
+  }
+}
+var bar = {
+  name:'mike'
+}
+console.log('call',foo.logName.call(bar)) 
+
+// 构造函数和this
+function Foo(){
+  this.bar = 'Lucas'
+}
+
+var instance = new Foo()
+console.log('Foo构造函数:',instance.bar)
+
+
+// new 操作符调用构造函数 具体做了什么
+
+// 创建一个新的对象
+// 将构造函数的 this 指向这个新对象
+// 为这个对象添加属性 方法等
+// 最终返回新对象
+
+// var obj = {}
+// obj.__proto__ = Foo.prototype
+// Foo.call(obj)
+
+
+// 如果在构造函数中出现了显示 return 的情况 需要注意区分两种场景
+
+function FooObj(){
+  this.user = 'Lucas'
+  const o = {}
+  return o
+}
+var instance = new FooObj()  // 返回的是对象 o
+console.log('FooObj:',instance.user)
+
+function FooBaseType () {
+  this.user = 'Lucas'
+  return 1
+}
+
+var instance = new FooBaseType()
+console.log('FooBaseType:',instance.user)
+
+// 结论:如果构造函数中显式返回一个值,且返回的是一个对象,那么this 就指向这个返回值
+// 如果返回的不是一个对象,那么this 仍然指向实例
+
+// 箭头函数中的this指向
+
+// 箭头函数使用this 不适用以上标准,而是根据外层(函数或者全局)上下文来决定
+
+var arrowFunction_0 = {
+  fn:function(){
+    setTimeout(function(){
+      console.log(this)
+    })
+  }
+}
+console.log('arrowFunction_0:',arrowFunction_0.fn())
+var arrowFunction_1 = {
+  fn:function(){
+    setTimeout(()=>{
+      console.log(this)
+    })
+  }
+}
+console.log('arrowFunction_1:',arrowFunction_1.fn())
+
+// 综合所有情况,结合this的优先级考察,这时this指向并不好确定。
+
+
+// this 优先级
+// 通常把 call apply bind new 对 this 绑定的情况称为显示绑定
+// 根据调用关系确定的this指向称为 隐式绑定
+
+// function foo(a){
+//   console.log(this.a)
+// }
+// var obj1 = {
+//   a:1,
+//   foo:foo
+// }
+// var obj2 = {
+//   a:2,
+//   foo:foo
+// }
+// obj1.foo.call(obj2)
+// obj2.foo.call(obj1)
+
+// call apply 的显示绑定一般来说优先级更高
+
+
+// bind
+
+
+// function fooBind(a){
+//   this.a = a
+// }
+// var obj1 = {}
+// var bar = foo.bind(obj1)
+// bar(2)
+// console.log(obj1.a)
+
+// 上述代码通过 bind 将bar 函数中的this绑定未obj1对象。
+// 执行bar(2)后 obj1.a 值为2 即经过bar(2) 执行后,obj1对象为 {a:2}
+
+// var baz = new bar(3)
+// console.log(baz.a)
+
+// bar 函数本身是通过bind 方法构造的函数,其内部已经将this绑定未 obj1 它作为构造函数,通过new 调用时,返回的实例已经与obj1解绑。
+
+
+// new 绑定修改了 bind绑定中的this,因此new 绑定优先级比显示绑定 bind 绑定更高
+  </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手动实现api</title>
+</head>
+<body>
+    <script>
+const offset = ele => {
+   let result = {
+       top: 0,
+       left: 0
+   }
+
+const getOffset = (node, init) => {
+    // nodeType  1 元素节点
+       if (node.nodeType !== 1) {
+           return
+       }
+
+       position = window.getComputedStyle(node)['position']
+
+       if (typeof(init) === 'undefined' && position === 'static') {
+           getOffset(node.parentNode)
+           return
+       }
+
+       result.top = node.offsetTop + result.top - node.scrollTop
+       result.left = node.offsetLeft + result.left - node.scrollLeft
+
+       if (position === 'fixed') {
+           return
+       }
+
+       getOffset(node.parentNode)
+   }
+
+   // 当前 DOM 节点的 display === 'none' 时, 直接返回 {top: 0, left: 0}
+   if (window.getComputedStyle(ele)['display'] === 'none') {
+       return result
+   }
+
+   let position
+
+   getOffset(ele, true)
+
+   return result
+
+}
+
+    </script>
+</body>
+</html>

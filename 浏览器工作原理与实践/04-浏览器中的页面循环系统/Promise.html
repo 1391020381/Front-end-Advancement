@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>手写Promise</title>
+</head>
+
+<body>
+
+ // 史上最最最详细的手写Promise教程
+ // https://juejin.im/post/5b2f02cd5188252b937548ab#heading-6
+  <script>
+    class Promise {
+      constructor(executor) {
+        // 初始化 state的等待态
+        this.state = 'pending'
+        // 成功值
+        this.value = undefined
+        // 失败原因
+        this.reason = undefined
+
+       // 成功存放的数组
+
+       this.onResolvedCallbacks = []
+
+       // 失败存放的数组
+
+       this.onRejectedCallbacks = []
+
+
+        let resolve = value => {  // 异步请求成功返回值
+          if (this.state === 'pending') {
+            this.state = 'fulfilled'
+            this.value = value
+            this.onResolvedCallbacks.forEach(fn=>fn())
+          }
+        }
+        let reject = reason => { //  异步请求返回失败返回值
+          if (this.state === 'pending') {
+            this.state = 'rejected'
+            this.reason = reason
+            this.onRejectedCallbacks.forEach(fn=>{fn()})
+          }
+        }
+
+
+        try {
+          executor(resolve, reject)
+        } catch (err) {
+          reject(err)
+        }
+      }
+      then(onFulfilled,onRejected){ // 回调成功后,业务处理函数
+         if(this.state ==='fulfilled') {
+           onFulfilled(this.value)
+         } 
+         if(this.state ==='rejected'){
+           onRejected(this.reason)
+         }
+         if(this.state === 'pending'){   
+           // 当 resolve 是在一个异步中执行, 在执行到 then时, this.state === 'pending' 此时我们把回调函数推入对应数组。在 resolve时再执行 数组中对应的 回调函数
+           this.onResolvedCallbacks.push(()=>{
+             onFulfilled(this.value)
+           })
+           this.onRejectedCallbacks.push(()=>{
+             onRejected(this.reason)
+           })
+         }
+         
+        }
+    }
+
+   function resolvePromise(promise2,x,resolve,reject){
+     if(x === promise2){
+       return
+     }
+   }
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,1 @@
+* webpack优化文件(构建优化，打包结果)Gzip-> 图片优化（jpg png svg 雪碧图base64） webP兼容问题。 -> 缓存（内存缓存 pwa TTP缓存 push cache ）-> 本地存储 （cookie sessionStorage localStorage(缓存base64图片 其他不经常变化的) indexDB大小无限制）

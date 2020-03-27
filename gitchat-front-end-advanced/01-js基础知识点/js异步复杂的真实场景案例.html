@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>js异步的真实场景案例</title>
+</head>
+<body>
+    <script>
+ // 预先有 urlIds 数组 数组的每一项都可以按照规则拼接成一个完整的图片地址。根据这个数据
+ // 依次请求图片进行预加载
+ var loadImg = urlId =>{
+     const url = `https://www.image.com/${urlId}`
+     return new Promise((resolve,reject)=>{
+         const img = new Image()
+         img.onerror = function(){
+             reject(urlId)
+         }
+         img.onload = function(){
+             resolve(urlId)
+         }
+         img.src = url
+     })
+ }       
+var urlIds = [1,2,3,4,5]
+urlIds.reduce((prevPromise,urlId)=>{
+    return prevPromise.then(()=>loadImg(urlId))
+},Promise.resolve())
+
+    </script>
+
+    <script>
+        var loadImgOneByOne = async ()=>{
+            for(i of urlIds){
+                await loadImg(urlIds[i])
+            }
+        }
+        var getOrderStatus = async ()=>{
+            let result = ''
+            while(!result){
+                await loadImg(urlIds[1])
+            }
+        }
+    </script>
+    <script>
+       // 将所有图片的请求一次发出
+       var urlIds = [1,2,3,4,5]
+       var promiseArray = urlIds.map(urlId=>loadImg(urlId)) 
+       Promise.all(promiseArray).then(()=>{
+           console.log('finish load all')
+       }).catch(()=>{
+           console.log('promise all catch')
+       })
+
+    </script>
+
+    <script>
+        // 控制最大并发数为3 最多3个请求一起发出 剩下的2个一起发出
+        // arr.splice(start,count,addElement1,addElement2) 返回值是被删除的元素 数组
+    </script>
+
+    <script>
+        // getBooksInfo(123).then(data=>{console.log(data)})
+        // 短时间（100毫秒）内多次连续调用 只发送一次请求，且获的各个书目信息
+        // 要考虑服务端出错饿情况，[123,446] 只返回了 123信息,此时进行合理错误处理
+        // 处理重复的Id
+        const fetchBooksInfo = bookIdList => {
+   // ...
+   return ([{
+
+           id: 123,
+           // ...
+
+       },
+       {
+           id: 456
+           // ...
+       },
+       // ...
+   ])
+}
+
+
+        let bookIdListToFetch = []
+        let promiseMap  = {}
+        
+        var getUniqueArray = array => Array.from(new Set(array))
+        let timer 
+        var getBooksInfo = bookId => new Promise((resolve,reject)=>{
+            promiseMap[bookId] = promiseMap[bookId] || []
+            promiseMap[bookId].push({
+                resolve, // 在 resolve 里面执行 callback集合
+                reject
+            })
+            var clearTask = ()=>{
+            bookIdListToFetch = []
+            promiseMap = {}
+        }
+        if(bookIdListToFetch.length === 0){
+            bookIdListToFetch.push(bookId)
+            timer = setTimeout(()=>{
+                handleFetch(bookIdListToFetch,promiseMap)
+                clearTask()
+            },100)
+        }else{
+            bookIdListToFetch.push(bookId)
+            bookIdListToFetch = getUniqueArray(bookIdListToFetch)
+            if(bookIdListToFetch.length >=100){
+                clearTimeout(timer)
+                handleFetch(bookIdListToFetch,promiseMap)
+                clearTask()
+            }
+        }
+        })
+        var handleFetch = (list,map)=>{
+            fetchBooksInfo(list).then(resultArray=>{
+                const resultIdArray = resultArray.map(item=>{item.id})
+                resultArray.forEach(data=>{
+                    promiseMap[data.id].forEach(item=>{
+                        item.resolve(data)
+                    })
+
+                    let rejectIdArray = []
+                    bookIdListToFetch.forEach(id=>{
+                        
+                    })
+                })
+            })
+        }
+    </script>
+</body>
+</html>

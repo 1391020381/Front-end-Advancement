@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Lazy-load</title>
+    <style>
+        .img {
+          margin: 0 auto;
+          width: 400px;
+          height:400px;
+        }
+        .pic {
+         width: 100%;
+         height: 100%;
+        }
+      </style>
+</head>
+<body>
+    <div class="img">
+        <img class="pic" alt="加载中" data-src="./images/1.jpg">
+      </div>
+      <div class="img">
+        <img class="pic" alt="加载中" data-src="./images/2.jpg">
+      </div>
+      <div class="img">
+        <img class="pic" alt="加载中" data-src="./images/3.jpg">
+      </div>
+      <div class="img">
+        <img class="pic" alt="加载中" data-src="./images/4.jpg">
+      </div>
+      <div class="img">
+        <img class="pic" alt="加载中" data-src="./images/5.jpg">
+      </div>
+       <div class="img">
+        <img class="pic" alt="加载中" data-src="./images/6.jpg">
+      </div>
+       <div class="img">
+        <img class="pic" alt="加载中" data-src="./images/7.jpg">
+      </div>
+       <div class="img">
+        <img class="pic" alt="加载中" data-src="./images/8.jpg">
+      </div>
+       <div class="img">
+        <img class="pic" alt="加载中" data-src="./images/9.jpg">
+      </div>
+       <div class="img">
+        <img class="pic" alt="加载中" data-src="./images/10.jpg">
+      </div>
+    </div>
+
+    <script>
+    // 当前可是区域的高度
+    let viewHeight = window.innerHeight || document.documentElement.clientHeight
+    let imgs = document.querySelectorAll('img')
+    // num 用于统计当前显示到了哪张图片,避免每次都从第一张开始检查是否还要露出
+    let num = 0
+    function lazyLoad(){
+        for(let i = num;i<imgs.length;i++){
+            // 用可是区域高度减出元素顶部距离 可视区域顶部的高度
+            let distance = viewHeight - imgs[i].getBoundingClientRect().top
+            if(distance >= 0){
+                imgs[i].src = imgs[i].getAttribute('data-src')
+                num = i + 1
+            }
+        }
+    }
+    window.addEventListener('scroll',lazyLoad,false)
+    </script>
+</body>
+</html>

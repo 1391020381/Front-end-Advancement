@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>js宏任务与微任务</title>
+</head>
+<body>
+   
+    <script>
+       var t1 = new Date()
+       setTimeout(()=>{
+           const t3 = new Date()
+           console.log('setTimeout block')
+           console.log('t3-t1=',t3-t1)
+       },100) 
+       let t2 = new Date()
+       while(t2 - t1<200){
+           t2 = new Date()
+       }
+       console.log('end here')
+
+       // setTimeout 有一个 最大延迟 MDN是 4毫秒
+    </script>
+
+    <script>
+        console.log('start here')
+        new Promise((resolve,reject)=>{
+            console.log('first promise constructor')
+            resolve()
+        }).then(()=>{
+            console.log('first promise then')
+            // 但是，如果前面步骤返回值时一个Promise的话,情况就不一样了————如果前面返回的是Promise对象,后面的then将会被当做这个返回的Promsiede 第一个then来对待 
+            return new Promise((resolve,reject)=>{
+                console.log('second promise')
+                resolve()
+            }).then(()=>{
+                console.log('second promise then')
+            })
+        }).then(()=>{
+            console.log('another first promise then')
+        })
+        console.log('end here')
+// 当 then 方法返回一个 Promise时 第一个promise的第二个完成处理函数 会 置于返回的这个 新Promise的then方法后
+// 此时将返回的这个新Promise的then方法放到任务队列中,由于主线程并没有其他任务,转而执行第二个then任务。
+
+    </script>
+
+  <script>
+      console.log('start here')
+
+const foo = () => (new Promise((resolve, reject) => {
+   console.log('first promise constructor')
+   let promise1 = new Promise((resolve, reject) => {
+       console.log('second promise constructor')
+
+       setTimeout(() => {
+           console.log('setTimeout here')
+           resolve()
+       }, 0)
+
+       resolve('promise1') // 感觉 promise1 的 resolve 比 promise 0 先执行
+       // 其实 resolve 函数就是把 回调函数和 参数 保存起来，在 then的时候执行
+   })
+
+   
+   
+   
+   
+   resolve('promise0')
+
+   promise1.then(arg => {
+       console.log(arg)
+   })
+}))
+foo().then(arg => {
+   console.log(arg)
+})
+
+console.log('end here')
+  </script>
+
+// 当 promise.then中返回 promise 时  后面再跟 then
+<script>
+  async function async1() {
+   console.log('async1 start')
+   await async2() // 为啥 await 只在 函数内部起作用
+   console.log('async1 end')
+}
+
+async function async2() {
+   console.log('async2')
+}
+
+console.log('script start')
+
+setTimeout(function() {
+   console.log('setTimeout')
+}, 0)  
+
+async1()
+new Promise(function(resolve) {
+   console.log('promise1')
+   resolve()
+}).then(function() {
+   console.log('promise2')
+})
+
+console.log('script end')
+
+// async1 start，继续下后执行到 await async2()，执行 async2 函数
+
+
+// async2 函数内并没有 await，按顺序执行，同步输出 async2，按照 async 函数规则，async2 函数仍然返回一个 promise，作为 async1 函数中的 await 表达式的值。相当于：
+
+// Promise.resolve().then(() => {})
+
+// 同时 async1 函数让出主线程，中断在 await 一行
+
+
+// 遇见 await，首先执行其右侧逻辑，并在这里中断 async1 函数
+
+</script>
+</body>
+</html>

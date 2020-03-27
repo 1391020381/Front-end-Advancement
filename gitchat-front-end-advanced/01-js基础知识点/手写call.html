@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>手写call apply bind</title>
+</head>
+<body>
+  <script>
+  var foo = {
+    value:1
+  }
+  function bar(){
+    console.log(this.value)
+  }
+  bar.call(foo)
+
+// 将函数设为对象的属性
+// 执行该函数
+// 删除该属性
+
+Function.prototype.call2 = function(context){ // context 传入的参数 this 需要绑定的对象
+  // 首先要获取调用 call的函数,用this 可以获取
+  context.fn = this
+  context.fn()
+  delete context.fn
+}
+
+bar.call2(foo)
+
+  </script>
+
+  <script>
+  var foo = {
+    value:1
+  }
+  function bar(name,age){
+    console.log(name)
+    console.log(age)
+    console.log(this.value)
+  }
+  bar.call(foo,'kevin',18)
+  
+  Function.prototype.call2 = function(context){
+    context.fn = this
+    var args = []
+    for(var i = 1,len =arguments.length;i<len;i++){
+      args.push('arguments['+i+']')
+    }
+    eval('context.fn('+args+')')
+    delete context.fn
+  }
+  bar.call2(foo,'kevin',18)
+  </script>
+
+
+
+<script>
+var value = 1
+function bar(){
+  console.log(this.value)
+}
+
+bar.call(null)
+var obj = {
+  value:1
+}
+function bar(name,age){
+  return {
+    value:this.value,
+    name:name,
+    age:age
+  }
+}
+console.log(bar.call(obj,'kevin',18))
+
+
+Function.prototype.call2 = function(context){  // 模式 对象调用
+  var context = context || window
+  context.fn = this
+  var args = []
+  for(var i =1,len = arguments.length;i<len;i++){
+    args.push('arguments['+i+']')
+  }
+  console.log('args:',args)
+  // eval('context.fn('+args+')')   // 这里 args 会自动调用Array.toString()这个方法
+  // [1,2,3].toString()   "1,2,3"
+  // [1,2,3,4] + ''   "1,2,3,4"
+  var result = eval('context.fn('+args+')')
+  delete context.fn
+  return result
+}
+
+var value = 2
+var obj  = {
+  vlaue:1
+}
+function bar(name,age){
+  console.log(this.value)
+  return {
+    value:this.value,
+    name:name,
+    age:age
+  }
+}
+bar.call2(null)
+console.log(bar.call2(obj,'kevin',18))
+</script>
+</body>
+</html>

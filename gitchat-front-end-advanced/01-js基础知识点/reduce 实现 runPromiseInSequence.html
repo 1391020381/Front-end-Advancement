@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>reduce 实现 runPromiseInSequence</title>
+</head>
+<body>
+ <script>
+// var runPromiseInSequence = (array, value) => array.reduce(
+//    (promiseChain, currentFunction) => promiseChain.then(currentFunction),
+//    Promise.resolve(value)
+// )
+ 
+ var f1 = ()=> new Promise((resolve,reject)=>{
+   setTimeout(()=>{
+     console.log('p1 running')
+     resolve(1)
+   },3000)
+ })
+ var f2 = ()=> new Promise((resolve,reject)=>{
+   setTimeout(()=>{
+     console.log('p2 running')
+     resolve(2)
+   },1000)
+ })
+ var array = [f1,f2]
+ // reduce 方法的第一个参数都是一个函数。该函数接受以下四个参数
+ // 1. 累积变量 默认为数组的第一个成员
+ // 2. 当前变量  默认为数组的第二个成员
+ // 当前位置  
+ // 原数组
+
+
+ // reduce 方法的第二个参数 指定初始值
+ var runPromiseInSequence = (array,value)=>{
+  console.log(array,value)
+   array.reduce((promiseChain,currentFunction)=>{
+    promiseChain.then(currentFunction)
+   },Promise.resolve(value))
+  }
+
+runPromiseInSequence = (array, value) => array.reduce(
+   (promiseChain, currentFunction) => {
+     return promiseChain.then(currentFunction)
+   },
+   Promise.resolve(value)
+)
+  //runPromiseInSequence(array,'init')
+ </script>
+
+
+
+
+
+
+<script>
+  // 尾调用由于是函数的最后一步操作，所以不需要保留外层函数的调用帧，因为调用位置、内部变量等信息都不会再用到了，只要直接用内层函数的调用帧，取代外层函数的调用帧就可以了
+  // 注意，只有不再用到外层函数的内部变量，内层函数的调用帧才会取代外层函数的调用帧，否则就无法进行“尾调用优化”。
+//  var f = v=> v
+//  var f = function (v){
+//    return v
+//  } 
+ // 如果箭头函数的代码块部分多于一条语句,就要使用大括号将它们括起来,并且使用 return 语句返回 
+function runPromiseInSequence(array,value){
+  console.log(array,value)
+  array.reduce(function(promiseChain,currentFunction){
+    console.log(promiseChain,currentFunction)
+   return promiseChain.then(currentFunction)
+  },Promise.resolve(value))
+}
+
+// runPromiseInSequence(array,'init')
+</script>
+
+<script>
+  // Array.prototype.reduce || 
+  Array.prototype.reduce = function(func,initialValue){
+    var arr = this
+    var base = typeof initialValue === 'undefined'?arr[0]:initialValue
+    var startPoint = typeof initialValue === 'undefined'?1:0
+    arr.slice(startPoint).forEach(function(val,index){
+      base = func(base,val,index + startPoint,arr) // 把 base val index arr 传到回调函数中 并返回赋值给 base
+    })
+  }
+   runPromiseInSequence(array,'custom-reduce')
+</script>
+</body>
+</html>

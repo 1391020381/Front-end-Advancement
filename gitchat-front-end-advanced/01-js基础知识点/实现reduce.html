@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>实现reduce</title>
+</head>
+<body>
+  <script>
+    Array.prototype.reduce = Array.prototype.reduce ||function (func,initialValue) {
+    var arr = this // 调用reduce的数组
+    var base = typeof initialValue === 'undefined'?arr[0]:initialValue
+    var startPoint = typeof initialValue ==='undefined'?1:0
+    arr.slice(startPoint).forEach(function (val,index) {
+      base = func(base,val,index + startPoint,arr)
+    })
+    return base
+  }
+  // reduce 方法 依次处理数组的每个成员,最终累计为一个值
+  [1, 2, 3, 4, 5].reduce(function (a, b) {
+  console.log(a, b);
+  return a + b;
+})
+  
+
+  
+  </script>
+</body>
+</html>

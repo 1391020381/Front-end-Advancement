@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vue3响应式</title>
+</head>
+<body>
+    <script>
+        var data = {
+            name:'zhangsan',
+            age:20
+        }
+        var proxyData = new Proxy(data,{
+            get(target,key,receiver){
+                const ownkeys = Reflect.ownKeys()
+                const result = Reflect.get(target,key,receiver)
+                console.log('get',key)
+                console.log('get-result:',result)
+                return result
+            },
+            set(target,key,val,receiver){
+                const oldVal  = target[key]
+                if(val == oldVal){
+                    return true
+                }
+                const result = Reflect.set(target,key,val,receiver)
+                console.log('set',key,val)
+                console.log('set-result:',result)
+                return result
+            },
+            deleteProperty(target,key){
+                const result = Reflect.deleteProperty(target,key)
+                console.log('delete property',key)
+                console.log('deleteProperty:',result)
+                return result
+            }
+        })
+    </script>
+</body>
+</html>

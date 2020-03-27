@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>错误收集</title>
+</head>
+<body>
+    
+    <script>
+        try{
+            a // 语法错误
+        }catch(e){
+            console.log(e)
+        }
+        try{
+         setTimeout(()=>{
+             a    // 异步错误
+         })
+        }catch(e){
+            console.log(e)
+        }
+    </script>
+
+    <script>
+        window.onerror = function(message,source,lineno,colno,error){
+            // window.onerror 函数消化错误,需要显示返回true 以保证错误不会向上抛出,控制台也就不会看到一堆错误提示。
+        }
+
+        window.addEventListener('error', error => {
+   if (!error.message) {
+       // 网络资源加载错误
+       console.log(error)
+   }
+}, true)
+
+
+
+
+window.addEventListener('load', () => {
+   sessionStorage.setItem('good_exit', 'pending')
+})
+
+window.addEventListener('beforeunload', () => {
+   sessionStorage.setItem('good_exit', 'true')
+})
+
+if(sessionStorage.getItem('good_exit') &&
+   sessionStorage.getItem('good_exit') !== 'true') {
+   // 捕获到页面崩溃
+}
+    </script>
+
+    <script>
+      //  上面提到框架会用 console.error 的方法抛出错误，因此可以劫持 console.error，捕获框架中的错误并做出处理：
+
+const nativeConsoleError = window.console.error
+window.console.error = (...args) => nativeConsoleError.apply(this, [`I got ${args}`])
+    </script>
+
+<script>
+    var patchMethod = type =>()=>{
+        const result = history[type].apply(this,arguments)
+        const event = new Event(type)
+        event.arguments = arguments
+        window.dispatchEvent(event)
+    }
+    history.pushState = patchMethod('pushState')
+    history.replaceState = patchMethod('replaceState')
+
+
+    window.addEventListener('replaceState',e=>{
+        // report
+    })
+    window.addEventListener('pushState',e=>{
+        // report
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSBridge的原理</title>
+</head>
+<body>
+    
+    <script>
+        window.JSBridge = {
+            // 调用Native
+            invoke:function(bridgeName,data={}){
+                nativeBridge.postMessage({
+                    bridgeName,
+                    data
+                })
+            },
+            receiveMessage:function(msg){
+                // 处理msg
+                var bridgeName = msg.bridgeName
+                data = msg.data
+            }
+        }
+    </script>
+
+
+    <script>
+        (function(){
+            var id = 0
+            var callbacks = {}
+            var registerFuncs = {}
+            window.JSBridge = {
+                invoke:function(bridgeName,callback,data){
+                    var thisId = id++  // 获取唯一id
+                    callback[thisId] = callback
+                    nativeBridge.postMessage({
+                        bridgeName:bridgeName,
+                        data:data||{},
+                        callbackId:thisId
+                    })
+                },
+                receiveMessage:function(msg){
+                    var bridgeName = msg.bridgeName
+                    var data = msg.data || {}
+                    var callbackId = msg.callbackId
+                    var responseId = msg.responseId
+                    if(callbackId){ // js 调用 Native 后寻找 句柄的 依据
+                        if(callbacks[callbackId]){
+                            callbacks[callbackId](msg.data)
+                        }
+                        // bridgeName 和 callbackId 不会同时存在
+                    }else if(bridgeName){  // native 调用 js 
+                        if(registerFuncs[bridgeName]){ 
+                         var ret = {}
+                         var flag = false
+                         registerFuncs[bridgeName].forEach(function(callback){
+                             callback(data,function(r){
+                                 flag = true
+                                 ret = Object.assign(ret,r)
+                             })
+                         })
+                         if(flag){ // 回调Native
+                             nativeBridge.postMessage({ 
+                                responseId,
+                                ret
+                             })
+                         }
+
+                        }
+                    }
+                },
+                register:function(bridgeName,callback){  // js 在注册API
+                    if(!registerFuncs[bridgeName]){
+                        registerFuncs[bridgeName] = []
+                    }
+                    registerFuncs[bridgeName].push(callback) // 储存回调
+                }
+            }
+        })()
+    </script>
+</body>
+</html>

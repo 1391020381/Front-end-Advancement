@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>window.performance</title>
+</head>
+<body>
+   
+    <script>
+          window.performance = {
+            memory:{
+                usedJSHeapSize,
+                totalJSHeapSize,
+                jsHeapSizeLimit
+            },
+            navigation:{
+                redirectCount,
+                type
+                // 0 正常跳转
+                // 1 window.location.reload()
+                // 2 通过浏览器历史记录, 以及前进后退进入
+                // 255 其他方式进入
+            },
+            timing:{
+               navigationStart,
+               unloadEventStart,
+               unloadEventEnd,
+               redirectStart,
+               redirectEnd,
+               // 检查缓存前 准备请求第一个资源的时间
+               fetchStart,
+               domainLookupStart,
+               domainLookupEnd,
+               connectStart, // tcp
+               connectEnd,
+               secureConnectionStart, // 连接建立完成后,请求文档开始的时间
+               requestStart,
+               responseStart,
+               responseEnd,
+               domLoading,
+               domInteractive,
+               domContentLoadedEventStart,
+               domContentLoadedEventEnd,
+               loadEventStart,
+               loadEventEnd
+            }
+        }
+    </script>
+    <script>
+        var calcTime = ()=>{
+            let times = {}
+            let t = window.performance.timing
+
+            times.redirectTime  = t.redirectEnd - t.redirectStart
+        }
+    </script>
+</body>
+</html>

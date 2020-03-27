@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>发布—订阅模式</title>
+</head>
+<body>
+    <p>
+ 发布-订阅模式又叫观察者模式,它定义对象间的一种一对多的依赖关系。   
+    </p>
+    <p>
+        当一个对象的状态发生改变时,所以依赖于它的对象都将得到通知。
+    </p>
+    <p>
+   在javascript开发中,我们一般用事件模型来代替传统的发布订阅模式。
+    </p>
+    <script>
+    // 发布订阅模式
+    var salesOffices = {}
+    salesOffices.clientList = {}
+    salesOffices.listen = function(key,fn){  // 订阅的类型 和 回调
+        if(!this.clientList[key]){
+            this.clientList[key] = []
+        }
+        this.clientList[key].push(fn)
+    }
+    salesOffices.trigger = function(){ // 需要知道订阅的类型
+        var key = Array.prototype.shift.call(arguments)
+        var fns = this.clientList[key]
+        if(!fns || fns.length === 0){
+            return false
+        }
+        for(var i = 0,fn;fn = fns[i++];){
+            fn.apply(this,arguments)
+        }
+    }
+    salesOffices.listen('squareMeter88',function(price,squareMeter){
+        console.log('价格=' + price)
+        console.log('squareMeter=' + squareMeter)
+    })
+    salesOffices.listen('squareMeter110',function(price,squareMeter){
+        console.log('价格=' + price)
+        console.log('squareMeter=' + squareMeter)
+    })
+    salesOffices.trigger('squareMeter88',2000000, 88 ); 
+    salesOffices.trigger('squareMeter110',2000000, 110 ); 
+    </script>
+
+    <script>
+    // 通用的发布订阅模式
+    var event = {
+        clientList:{},
+        listen:function(key,fn){
+            if(!this.clientList[key]){
+                this.clientList[key] = []
+            }
+            this.clientList[key].push(fn)
+        },
+        trigger:function(){
+            var key = Array.prototype.shift.call(arguments)
+            var fns = this.clientList[key]
+            if(!fns || fns.length === 0){
+                return false
+            }
+            for(var i = 0,fn;fn = fns[i++];){
+               fn.apply(this,arguments)
+            }
+        },
+        remove:function(key,fn){
+            var fns = this.clientList[key]
+            if(!fns){
+                fns && (fns.length = 0)
+            }else {
+                for(var i = fns.length-1;i>=0;i--){
+                    var _fn = fns[i]
+                    if(_fn === fn){
+                        fns.splice(i,1)
+                    }
+                }
+            }
+        }
+    }
+    var installEvent = function(obj){
+        for(var i in event){
+            obj[i] = event[i]
+        }
+    }
+    var salesOffices = {}
+    installEvent(salesOffices)
+    salesOffices.listen( 'squareMeter88', function( price ){ console.log( '价格= ' + price );
+});
+salesOffices.listen( 'squareMeter100', function( price ){ console.log( '价格= ' + price );
+// 小明订阅消息
+// 小红订阅消息
+});
+salesOffices.trigger( 'squareMeter88', 2000000 ); // 输出:2000000
+salesOffices.trigger( 'squareMeter100', 3000000 ); // 输出:3000000
+    </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>js异步</title>
+</head>
+<body>
+  <script>
+   var loadImg = urlId =>{
+     var url = `https://www.image.com/${urlId}`
+     return new Promsie((resolve,reject)=>{
+       var img = new Image()
+       img.onerror = function () {
+         reject(urlId)
+       }
+       img.onload = function () {
+         resolve(urlId)
+       }
+       img.src = url
+     })
+   }
+  var urlIds = [1,2,3,4,5]
+
+  urlIds.reduce((prevPromise,urlId)=>{
+    return prevPromise.thne(()=> loadImg(urlId))
+  },Promise.resolve())
+  
+  </script>
+
+  <script>
+    function red() {
+   console.log('red');
+}
+function green() {
+   console.log('green');
+}
+function yellow() {
+   console.log('yellow');
+}
+  function firFunc(func,wait){
+    return new Promise((resolve,reject)=>{
+      setTimeout(()=>{
+        func()
+      },wait)
+    })
+  }
+ function runFunc(){
+   firFunc(red,3000).then(()=>{
+     firFunc(green,1000).then(()=>{
+       firFunc(yellow,2000).then(()=>{
+         runFunc()
+       })
+     })
+   })
+ }
+  </script>
+</body>
+</html>

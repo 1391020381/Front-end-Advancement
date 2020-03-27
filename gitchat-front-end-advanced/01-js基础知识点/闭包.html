@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>闭包</title>
+</head>
+<body>
+  <script>
+  function numGenerator(){
+    let num = 1
+    num ++
+    return ()=>{
+      console.log(num)
+    }
+  }
+  var getNum = numGenerator()
+  getNum()
+
+// 例题1
+  var foo = (function() {
+   var v = 0
+   return () => {
+       return v++
+   }
+}())
+
+for (let i = 0; i < 10; i++) {
+   foo()
+}
+console.log(foo())
+
+// 例题2
+var foo = ()=>{
+  var arr = []
+  var i
+  for(i = 0;i<10;i++){
+    arr[i] = function(){
+      console.log(i)
+    }
+  }
+  return arr[0]
+}
+foo()()
+
+// 例题3
+var fn = null
+var  foo = ()=>{
+  var a = 2
+  function innerFoo(){
+    console.log(a)
+  }
+  fn = innerFoo
+}
+var bar = ()=>{
+  fn()
+}
+foo()
+bar()  // 词法作用域
+
+var fn = null
+var foo = ()=>{
+  var a = 2
+  function innerFoo(){
+   console.log(c)
+    console.log(a)
+  }
+  fn = innerFoo
+}
+var bar = ()=>{
+  var c = 100
+  fn()
+}
+foo()
+bar() // 词法作用域
+
+// 利用闭包实现单例模式 保证一个类只有一个实例,并提供一个访问它的全局访问点
+
+// function singleModle(){
+//   let single 
+//   if(single){
+//     return new Error('请不要重复创建')
+//   }else{
+//    single = {
+
+//    }
+//    return single
+//   }
+// }
+
+function Person(){
+  this.name = 'lucas'
+}
+ var getSingleInstance = (function(){
+   var sinleInstance 
+   return function(){
+     if(sinleInstance){
+       return sinleInstance
+     }
+     return sinleInstance = new Person()
+   }
+ })()
+
+  </script>
+</body>
+</html>

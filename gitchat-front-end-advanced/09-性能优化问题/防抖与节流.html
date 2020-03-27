@@ -1,0 +1,49 @@
+! <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>防抖与节流函数</title>
+</head>
+<body>
+    
+
+    <script>
+    // 简单的防抖动函数
+    const debounce = (func,wait,immediate)=>{
+        let timeout 
+        return function(){
+            const context = this
+            const args = arguments
+            const callNow = immediate & !timeout
+            timeout&&clearTimeout(timeout)
+            timeout = setTimeout(function(){
+                timeout = null
+                if(!immediate){
+                    func.apply(context,args)
+                }
+            },wait)
+            if(callNow){
+                func.apply(context,args)
+            }
+        }
+    }
+ 
+ // 节流
+
+ const throttle = (func,wait)=>{
+     let timeout
+     return function(){
+         const context = this
+         const args = arguments
+         if(!timeout){
+             timeout = setTimeout(function(){
+                 func.apply(context,args)
+                 timeout = null
+             },wait)
+         }
+     }
+ }
+    </script>
+</body>
+</html>

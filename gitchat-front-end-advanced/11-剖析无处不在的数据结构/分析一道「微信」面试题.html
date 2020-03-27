@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分析一道「微信」面试题</title>
+</head>
+<body>
+    
+
+    <script>
+        // 实现LazyMan 按照以下方式调用。
+       // LazyMan("Hank")
+// Hi! This is Hank!
+ 
+//LazyMan("Hank").sleep(10).eat("dinner")
+// Hi! This is Hank!
+// 等待 10 秒..
+// Wake up after 10
+// Eat dinner~
+ 
+//LazyMan("Hank").eat("dinner").eat("supper")
+// Hi This is Hank!
+// Eat dinner~
+// Eat supper~
+ 
+//LazyMan("Hank").sleepFirst(5).eat("supper")
+// 等待 5 秒
+// Wake up after 5
+// Hi This is Hank!
+// Eat supper
+    </script>
+
+
+
+<script>
+    class LazyManGenerator {
+ constructor(name) {
+   this.taskArray = []
+
+   // 初始化时任务
+   const task = () => {
+     console.log(`Hi! This is ${name}`)
+     // 执行完初始化时任务后，继续执行下一个任务
+     this.next()
+   }
+
+   // 将初始化任务放入任务队列中
+   this.taskArray.push(task)
+
+   setTimeout(() => {
+     this.next()
+   }, 0)
+ }
+ next() {
+     // 取出下一个任务并执行
+   const task = this.taskArray.shift()
+   task && task()
+ }
+
+ sleep(time) {
+   this.sleepTask(time, false)
+   // return this 保持链式调用
+   return this
+ }
+
+ sleepFirst(time) {
+   this.sleepTask(time, true)
+   return this
+ }
+ sleepTask(time, prior) {
+   const task = () => {
+     setTimeout(() => {
+       console.log(`Wake up after ${time}`)
+       this.next()
+     }, time * 1000)
+   }
+
+   if (prior) {
+     this.taskArray.unshift(task)
+   } else {
+     this.taskArray.push(task)
+   }
+ }
+
+ eat(name) {
+   const task = () => {
+     console.log(`Eat ${name}`)
+     this.next()
+   }
+
+   this.taskArray.push(task)
+   return this
+ }
+}
+
+function LazyMan(name) {
+ return new LazyManGenerator(name)
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>compose 实现的几种方案</title>
+</head>
+<body>
+  <script>
+  // compose 最简单的实现是面向过程的
+  var compose = function (...args) {
+    let length = args.length
+    let count = length -1
+    let result
+    return function f1(...arg1) {
+      result = args[count].apply(this,arg1) // 执行最后一个函数
+      if(count <=0){
+        count = length -1
+        return result
+      }
+      count--
+      return f1.call(null,result)
+    }
+  }
+  
+
+  // 再举一个部署管道机制的🌰，即前一个函数的输出是后一个函数的输入
+  const pipeline = (...funcs) => val => funcs.reduce((a, b) => b(a), val)
+  </script>
+</body>
+</html>

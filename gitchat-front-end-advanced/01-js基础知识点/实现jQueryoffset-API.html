@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>实现jQueryoffset-API</title>
+</head>
+<body>
+  <script>
+  // 如何获取文档中任意一个元素距离文档document顶部的距离
+
+  // 通过递归实现
+  // 通过 getBoundingClientRect API实现
+
+  // js的offsetTop来访问一个DOM节点上边框相对距离其本身最近 且 position值为非static的祖先元素的垂直偏移量
+  
+  var  offset = ele =>{
+    let result = {
+      top:0,
+      left:0
+    }
+    // nodeType 1  元素 <p> <div>
+    var getOffset = (node,init)=>{
+      if(node.nodeType!==1){
+        return 
+      }
+      position = window.getComputedStyle(node)['position']
+      if(typeof(init) === 'undefined' && position === 'static'){
+        getOffset(node.parentNode)
+        return
+      }
+      result.top = node.offsetTop + result.top - node.scrollTop
+      result.left = node.offsetLeft + result.left - node.scrollLeft
+      if(position === 'fixed'){
+        return 
+      }
+      getOffset(node.parentNode)
+      // 当前DOM节点 的display === 'none' 时,直接返回 {top:0,left:0}
+      if(window.getComputedStyle(ele)['display']==='none'){
+        return result
+      }
+      let position
+      getOffset(ele,true)
+      return result
+    }
+  }
+  </script>
+
+  <script>
+  // getBoundingClientRect方法用来描述一个元素的具体位置,该位置的下面四个属性都是相对于视口左上角的位置而言的。
+  
+  var offset = ele =>{
+    let result = {
+      top:0,
+      left:0
+    }
+    // 当前为 IE11以下 直接返回 { top:0,left:0 }
+    if(!ele.getClientRects().length){
+      return result
+    }
+    // 当前DOM节点的 display === 'none' 时,直接返回 { top:0,left:0 }
+    if(window.getComputedStyle(ele)['display'] === 'none'){
+      return result
+    }
+    result = ele.getBoundingClientRect()
+    var docElement = ele.ownerDocument.docElement
+
+    return {
+      top:result.top + window.pageYOffset - docElement.clientTop,
+      left:result.left + window.pageXOffset - docElement.clientLeft
+    }
+  }
+  </script>
+</body>
+</html>

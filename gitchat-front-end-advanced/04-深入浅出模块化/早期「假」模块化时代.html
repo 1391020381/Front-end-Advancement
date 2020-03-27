@@ -1,0 +1,39 @@
+! <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>早期「假」模块化时代</title>
+</head>
+<body>
+    <script>
+       (function(window){
+           var data = 'data'
+           function foo(){
+               console.log(`foo executing,data is ${data}`)
+           }
+           function bar (){
+               data = 'modified data'
+               console.log(`bar executing,data is now ${data}`)
+           }
+           window.module = {foo,bar}
+       })(window) 
+    </script>
+    <script>
+        (function(window,$){
+            var data = 'data'
+
+   function foo() {
+       console.log(`foo executing, data is ${data}`)
+       console.log($)
+   }
+   function bar() {
+       data = 'modified data'
+       console.log(`bar executing, data is now ${data} `)
+   }
+   window.module1 = { foo, bar }
+        }(window,jQuery))
+    // 事实上,这就是现代模块化方案的基石    
+    </script>
+</body>
+</html>

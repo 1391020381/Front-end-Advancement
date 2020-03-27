@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>单例设计模式</title>
+</head>
+<body>
+  <script>
+  // Vue.use 会自动 阻止多次注册相同的插件,届时即使多次调用也只会注册一次该插件。 
+  class Singleton {
+    constructor(){
+      if(!Singleton.instance){
+        Singleton.instance = this
+      }
+      return Singleton.instance
+    }
+  }
+  
+  
+  </script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>数据劫持与代理</title>
+</head>
+<body>
+  <script>
+//   let data = {
+//       stage:'GitChat',
+//       course:{
+//           title:'前端开发进阶',
+//           author:['Lucas','Ronaldo'],
+//           publishTime:'2018年5月'
+//       }
+//   }
+/**
+
+Array.prototype上挂在的方法并不能触发data.course.author 属性值的 setter
+由于这个并不属于做赋值操作,而是push API调用。
+
+**/
+
+
+
+
+//   Object.keys(data).forEach(key=>{
+//       let currentValue = data[key]  
+//       // 在set 中相当于  data[key] = newValue currentValue 
+//       // currentValue 在 Object.defineProperty 中被引用
+//       Object.defineProperty(data,key,{
+//           enumerable:true,
+//           configurable:false,
+//           get(){
+//            console.log(`getting${key}value now,getting value is:`,currentValue)
+//            return currentValue
+//           },
+//           set(newValue){ // data 对应的key的value被改变时触发
+//               console.log(data)
+//               currentValue   = newValue
+//               console.log(data)
+//               console.log(`setting${key}value now ,setting value is `,currentValue)
+//           }
+//       })
+//   })
+
+//   let observe = data =>{
+//       if(!data||typeof data !== 'object'){
+//           return
+//       }
+//       Object.keys(data).forEach(key=>{
+//           let currentValue = data[key]
+//           observe(currentValue)
+//           Object.defineProperty(data,key,{
+//               enumerable:true,
+//               configurable:false,
+//               get(){
+//                   console.log(`getting ${key}value now,getting value is :`,currentValue)
+//                   return currentValue
+//               },
+//               set(newValue){
+//                   // 没有对newValue再次递归进行observe（newvalue）
+//                   currentValue = newValue
+//                   console.log(`setting ${key}value now ,setting value is `,currentValue)
+//               } 
+//           })
+//       })
+//   }
+//   observe(data)
+
+  // 重写数组
+  const arrExtend = Object.create(Array.prototype)
+  const arrMethods = [
+      'push',
+      'pop',
+      'shift',
+      'unshift',
+      'splice',
+      'sort',
+      'reverse'
+  ]
+  arrMethods.forEach(method=>{
+      const oldMethod = Array.prototype[method]
+      const newMethod = function(...args){
+          oldMethod.apply(this,args)
+          console.log(`${method}方法被执行了`)
+      }
+      arrExtend[method] = newMethod
+  })
+  Array.prototype = Object.assign(Array.prototype,arrExtend)
+  // 覆盖原生的数组的一些方法  并在函数执行完执行一些操作
+  let data = {
+      stage:'GitChat',
+      course:{
+          title:'前端开发进阶',
+          author:['Lucas','Ronaldo'],
+          publishTime:'2018年5月'
+      }
+  }
+ const observe = data =>{
+     if(!data || typeof data !=='object'){
+         return
+     }
+     Object.keys(data).forEach(key=>{
+         let currentValue = data[key]
+         observe(currentValue)
+         Object.defineProperty(data,key,{
+             enumerable:true,
+             configurable:false,
+             get(){
+                 console.log(`getting${key}value now,getting value is:`,currentValue)
+                 return currentValue
+             },
+             set(newValue){
+                 currentValue = newValue
+                 console.log(`setting${key} value now , setting value is `,currentValue)
+                 return currentValue
+             }
+         })
+     })
+ }
+ observe(data)
+  </script>  
+</body>
+</html>

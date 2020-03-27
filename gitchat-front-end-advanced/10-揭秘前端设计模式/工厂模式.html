@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>工厂模式</title>
+</head>
+<body>
+  <script>
+  // new Vue() vue 开发中main.js中  
+  // vue react中也使用到工厂模式   
+  
+  class Car {
+    constructor(options){
+      const {doors = 4,state = 'new',color='black'} = options
+      this.doors = doors
+      this.state = state
+      this.color = color
+    }
+  }
+  class Truck {
+    constructor(options){
+      const { wheelSize = 'medium',state='used',color='silver'} = options
+      this.wheelSize = wheelSize
+      this.state = state
+      this.color = color
+    }
+  }
+  
+  class VehicleFactory{
+    createVehicle(options){
+      switch(options.type){
+        case 'car':
+        this.vehicleTarget = Car
+        break
+        case 'truck':
+        this.vehicleTarget = Truck
+        break
+        default:
+        this.vehicleTarget = Car
+        break
+      }
+      return new this.vehicleTarget(options)
+    }
+  }
+
+var factory = new VehicleFactory()
+var instancel = factory.createVehicle({
+  type:'car',
+  color:'yellow',
+  doors:4
+})
+var instance2 = factory.createVehicle({
+  type:'truck',
+  state:'new',
+  wheelSize:'small'
+})
+  </script>
+  <script>
+  class Pizza {
+    constructor(size){
+      this.size = size
+    }
+    addMushroom (){
+      this.mushroom = true
+      return this
+    }
+    addOliver(){
+      this.oliver = true
+      return this
+    }
+    addPoulet(){
+      this.poulet = true
+      return this
+    }
+    addChesse(){
+      this.chesse = true
+      return this
+    }
+    addTomato(){
+      this.tomato = true
+      return this
+    }
+    addLettuce(){
+      this.lettuce = true
+      return this
+    }
+    build(){
+      return new Pizza(this)
+    }
+  }
+  console.log(new Pizza(32).addOliver().addTomato().build())
+  </script>
+</body>
+</html>

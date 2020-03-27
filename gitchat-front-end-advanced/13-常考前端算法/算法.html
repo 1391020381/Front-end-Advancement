@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>算法</title>
+</head>
+<body>
+    <script>
+    var quickSort = array =>{
+        if(array.length<2){
+            return array.slice()
+        }
+        let pivot = array[Math.floor(Math.random()*array.length)]
+        let left = []
+        let middle = []
+        let right = []
+        for(let i=0;i<array.length;i++){
+            var value = array[i]
+            if(value<pivot){
+               left.push(value) 
+            }
+            if(value === pivot){
+                middle.push(value)
+            }
+            if(value>pivot){
+                right.push(value)
+            }
+            return quickSort(left).concat(middle,quickSort(right))
+        }
+    }
+    
+    function bSort(arr){
+        var len = arr.length
+        for(let i =0;i<len-1;i++){
+            for(let j = 0;j<len-1-i;j++){
+                // 相邻元素两两对比 元素交换  大的元素交换到后面
+                if(arr[j]>arr[j+1]){
+                    var temp = arr[j]
+                    arr[j] = arr[j+1]
+                    arr[j+1] = temp
+                }
+            }
+        }
+        return arr
+    }
+    
+    var shallowCopay = function(obj){
+        // 只拷贝对象
+        if(typeof obj!=='object'){
+            return
+        }
+        var newObj = obj instanceof Array ? []:{}
+        for(var key in obj){
+            if(obj.hasOwnProperty(key)){
+                newObj[key] = obj[key]
+            }
+        }
+        return newObj
+    }
+
+
+    var deepCopy = function(obj){
+        if(typeof obj !== 'object') return
+        var newObj = obj instanceof Array ?[]:{}
+        for(var key in obj){
+            if(ob.hasOwnProperty(key)){
+                newObj[key] = typeof obj[key] === 'object'?deepCopy(obj[ke]):obj[key]
+            }
+        }
+        return newObj
+    }
+
+
+    // 防抖 
+    function debounce(func,wait){
+        let timeout
+        return function (){
+            clearTimeout(timeout)
+         timeout =  setTimeout(func,wait)
+        }
+    }
+    </script>
+</body>
+</html>

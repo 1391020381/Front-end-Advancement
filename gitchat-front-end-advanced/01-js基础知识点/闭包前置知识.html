@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>闭包</title>
+</head>
+<body>
+  <script>
+
+  function bar(){
+    console.log('bar1')
+  }
+  var bar = function(){
+    console.log('bar2')
+  }
+
+bar()
+
+var bar = function(){
+  console.log('bar2')
+}
+function bar(){ // 函数声明会提升
+  console.log('bar1')
+}
+
+bar()
+
+foo(10)
+// undefined
+// 10
+// foo(num)
+// 1
+function foo(num){
+  console.log(foo) 
+  foo = num
+  console.log(foo)
+  var foo
+}
+console.log(foo)
+foo = 1
+console.log(foo)
+
+  // 暂时性死区
+  // 函数的参数默认值设置也会收到 TDZ的影响
+  function foo(arg1 = arg2,arg2){
+    console.log(`${arg1} ${arg2}`)
+  }
+  foo(null,'arg2') // 不会认为 函数第一个参数缺省 而会直接接受 null 作为第一个参数值
+  function foo(arg1){
+    let arg1
+  }
+  // 函数参数名会出现在其 执行上下文 作用域 当中
+  // 在函数的第一行,便已经声明了 arg1这个变量, 函数再用 let 声明,会报错
+  foo('arg1')
+  foo(undefined,'arg2')
+  </script>
+</body>
+</html>

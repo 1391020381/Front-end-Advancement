@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>树</title>
+</head>
+<body>
+    <script>
+    // 二叉树最为基本 因为它的结构最简单，每个节点之多包含两个节点。
+    // 左子树所有节点的值均小于或等于它的根节点的值
+    // 右子树的所有节点的值均大于或等于它的根节点的值
+    // 左右子树也分别为二叉搜索树
+ class Node{
+     constructor(data){
+         this.left = null
+         this.right = null
+         this.value = data
+     }
+     insertNode(root,newNode){
+         // insertNode方法判断目标父节点和插入节点的值,如果插入节点的值更小,则考虑放到父节点的左边,接着
+         // 递归调用this.insertNode(root.left,newNode)
+         if(newNode.value < root.value){
+             (!root.left)?root.left  = newNode:this.insertNode(root.left,newNode)
+         }else {
+             (!root.right)?root.right = newNode:this.insertNode(root.right,newNode)
+         }
+     }
+     insert(value){
+         let newNode = new Node(value)
+         if(!this.root){
+             this.root = newNode
+         }else{
+             this.insertNode(this.root,newNode)
+         }
+     }
+     removeNode(root,value){ // 根据一个父节点,移除一个子节点
+         if(!root){
+             return null
+         }
+         if(value<root.value){
+             root.left = this.removeNode(root.left,value)
+         }else if(value>root.value){
+             root.right = this.removeNode(root.right,value)
+             return root
+         }else{
+             if(!root.left && !root.right){
+                 root = null
+                 return root
+             }
+             if(root.left&&!root.right){
+                 root = root.left
+                 return root
+             }else if(root.right){
+                 root = root.right
+                 return root
+             }
+             let minRight = this.findMinNode(root.right)
+             root.value = minRight.value
+             root.right = this.removeNode(root.right,minRight.value)
+             return root
+         }
+     }
+ }
+    </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>数据劫持与代理-Proxy</title>
+</head>
+<body>
+    <script>
+        /**
+        
+        响应式框架的基本原理：
+        1. 收集视图依赖了哪些数据
+        2. 感知被依赖的数据变化
+        3. 数据变化是,自动 通知 需要更新的视图部分,并进行更新
+        
+
+        依赖收集
+        数据劫持/数据代理
+        发布订阅模式
+        **/
+    let data = {
+        stage:'GitChat',
+        course:{
+            title:'前端开发进阶',
+            author:['Lucas'],
+            publishTime:'2018年5月'
+        }
+    }
+    
+    const observe = data =>{
+        if(!data || Object.prototype.toString.call(data)!=='[object Object]'){
+         return
+        }
+        Object.keys(data).forEach(key=>{
+            let currentValue = data[key]
+            if(typeof currentValue === 'object'){
+                observe(currentValue)
+                data[key] = new Proxy(currentValue,{
+                    set(target,property,value,receiver){
+                       /**
+           因为数组的 push 会引起 length 属性的变化，
+           所以 push 之后会触发两次 set 操作，
+           我们只需要保留一次即可，property 为 length 时，忽略
+
+                       **/
+                 if(property !== 'length'){
+                     console.log(`setting${key} value now,setting value is`,currentValue)
+           return Reflect.set(target,property,value,receiver)
+                 }
+                    }
+                })
+            }else{
+                Object.defineProperty(data, key, {
+         enumerable: true,
+         configurable: false,
+         get() {
+           console.log(`getting ${key} value now, getting value is:`, currentValue)
+           return currentValue
+         },
+         set(newValue) {
+           currentValue = newValue
+           console.log(`setting ${key} value now, setting value is`, currentValue)
+         }
+       })  
+            }
+        })
+    }
+    
+    
+    
+    
+    </script>
+</body>
+</html>

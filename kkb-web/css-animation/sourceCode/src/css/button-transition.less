@@ -1,0 +1,24 @@
+.common{
+    position: absolute;
+    left: 50%;
+}
+
+.btn{
+    top: 10%;
+    border: 4px solid #fff;
+    text-align:center;
+    font-size: 24px;
+    border-radius: 25px;
+    background: white;
+    transition-property: all;
+    transition-duration: 0.4s;
+    transition-timing-function: ease-out;
+}
+.btn:hover{
+   font-size: 36px;
+    background: green;
+}
+
+// 这里有一点要注意，transition 属性的位置要放到 button 中。
+// 这样会告诉浏览器，不光按钮从初始状态变成悬停(hover)的时候要添加过渡效果，
+// 当从悬停状态变回初始状态时也要添加过渡效果

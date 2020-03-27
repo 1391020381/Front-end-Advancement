@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ES6</title>
+</head>
+<body>
+   
+    <script>
+       class PersonClass {
+           constructor(name){
+               this.name
+           }
+           sayName(){
+               console.log(this.name)
+           }
+       } 
+        
+       var PersonType2 = (function(){
+           'use strict'
+           const PersonType2 = function(name){
+               if(typeof new.target === 'undefined'){
+                   throw new Error('Constructor must be called width new')
+               }
+               this.name = name
+           }
+           Object.defineProperty(PersonType2,'sayName',{
+               value:function(){
+                   if(typeof new.target !=='undefined'){
+                       throw new Error('Method cannot be called with new')
+                   }
+                   console.log(this.name)
+               },
+               enumerable:false,
+               writable:true,
+               configurable:true
+           })
+           return PersonType2
+       })() 
+        
+        </script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>手写Promise</title>
+</head>
+<body>
+
+<script>
+//   const promisify = fn => args =>
+//  new Promise((resolve, reject) => {
+//    args.success = function(res) {
+//      return resolve(res)
+//    }
+//    args.fail = function(res) {
+//      return reject(res)
+//    }
+//  })
+//   wxRequest('./userInfo')
+//  .then(
+//    data => wxRequest(`./${data.id}/friendList`),
+//    error => {
+//      console.log(error)
+//    }
+//  )
+//  .then(
+//    data => {
+//      console.log(data)
+//    },
+//    error => {
+//      console.log(error)
+//    }
+//  )
+// Promise 其实就是一个构造函数,我们使用这个构造函数创建一个Promise实例
+// 该构造函数很简单,它只有一个参数,按照Promise/A+ 规范的命名
+// 把Promise构造函数的参数叫做 executor executor类型为函数。
+// 这个函数又自动具有 resolve reject 两个方法作为参数
+
+  
+
+
+
+  // Promise 构造函数返回一个promise对象实例,这个返回的promise对象具有一个then
+  // 方法。then方法中,调用者可以定义两个参数,分别是 onfulfilled 和 onrejected
+  // 它们都是函数类型。其中 onfulfilled通过参数 可以获取 resolve 
+  // onrejected获取promise 对象 rejected的值
+
+// promise.then 是 微任务
+ // status  value reason onfulfilled  onrejected
+// 实例化 Promise的时候 传入了 一个回调函数 function(resolve,reject){}
+// 在 Promise的内部 通过参数 executor(resolve,reject) 来接受并执行
+// 其中 resolve 执行回调函数  reject 失败回调
+// then 添加回调函数 
+</script>
+
+
+<script>
+  var promise = new Promise((resolve,reject)=>{
+    setTimeout(()=>{
+      resolve('lucas')
+    },2000)
+  })
+  promise.then(data=>{
+    console.log(data)
+    return `${data}next then`
+  }).then(data=>{
+    console.log(data)
+  })
+
+  var promise = new Promise((resolve, reject) => {
+ setTimeout(() => {
+     resolve('lucas')
+ }, 2000)
+})
+
+promise.then(data => {
+ console.log(data)
+ return new Promise((resolve, reject) => {
+   setTimeout(() => {
+       resolve(`${data} next then`)
+   }, 4000)
+ })
+})
+.then(data => {
+ console.log(data)
+})
+
+// 一个Promise 实例的 then 方法体 onfulfilled onrejected函数中
+// 是支持再次返回一个Promise 实例的,也支持返回一个非Promise 实例的普通值
+// 且返回的Promise 实例 或非Promise 实例 将会传给下一个 then的 onfulfilled
+</script>
+
+</body>
+</html>

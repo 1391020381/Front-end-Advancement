@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>箭头函数与this</title>
+</head>
+<body>
+  <script>
+  function foo(){
+    return a =>{
+      console.log(this.a)
+    }
+  }
+  
+  var obj1 = {
+    a:2
+  }
+  var obj2 = {
+    a:3
+  }
+  var bar = foo.call(obj1)
+  console.log('bar:',bar)
+  console.log(bar.call(obj2))
+
+  // 由于foo 的this 绑定到 obj1  bar 引用箭头函数的this 也会绑定大 obj1 箭头函数的绑定无法修改。
+
+  const a = 123
+  var foo = ()=> a =>{
+    console.log(this.a)
+  }
+
+  var bar = foo.call(obj1)
+  console.log('arrow-function:',bar.call(obj2))
+// 使用 const 声明的变量不会挂载到 window 全局对象中。因此this指向 window时,自然也找不到a 变量啦
+  </script>
+</body>
+</html>

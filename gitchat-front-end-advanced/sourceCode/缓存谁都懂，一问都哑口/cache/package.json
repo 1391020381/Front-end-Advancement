@@ -1,0 +1,26 @@
+{
+  "name": "cache",
+  "version": "1.0.0",
+  "description": "Cache demo",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon ./index.js"
+  },
+  "keywords": [
+    "cache",
+    "node"
+  ],
+  "devDependencies": {
+    "@babel/core": "latest",
+    "@babel/preset-env": "latest",
+    "@babel/register": "latest",
+    "koa": "latest",
+    "koa-conditional-get": "^2.0.0",
+    "koa-etag": "^3.0.0",
+    "koa-static": "latest"
+  },
+  "dependencies": {
+    "nodemon": "latest"
+  },
+  "license": "ISC"
+}

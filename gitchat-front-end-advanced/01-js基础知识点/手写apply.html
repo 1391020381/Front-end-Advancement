@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>手写apply</title>
+</head>
+<body>
+  <script>
+  // 模拟call   call2
+  // 把传入的 第一个对象 context 作为 call2 函数的 上下文 
+ // 并把调用调用 call2的 function 即 this 作为  context.fn = this
+ // eval('+args+')
+ // delete context.fn
+
+ //需要注意 传入 null 和  返回对象
+  </script>
+  <script>
+  Function.prototype.apply = function (context,arr){
+    var context = Object(context) || window
+    context.fn = this
+    var result 
+    if(!arr){
+      result = context.fn()
+    }else{
+      var args = []
+      for(var i = 0,len = arr.length;i<len;i++){
+        args.push('arr['+ i + ']')
+      }
+      result = eval('context.fn('+args+')')
+    }
+    delete context.fn
+    return result
+  }
+  
+  </script>
+</body>
+</html>

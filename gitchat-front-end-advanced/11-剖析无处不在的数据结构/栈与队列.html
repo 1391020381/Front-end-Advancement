@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>栈与队列</title>
+</head>
+<body>
+   <script>
+   class Stack{
+       constructor(...args){
+           this.stack = [...args]
+       }
+       push(...items){
+           return this.stack.push(...items)
+       }
+       pop(){ // 删除最后一个元素 并返回最后一个元素 改变原数组
+           return this.stack.pop()
+       }
+       peek(){
+           return this.isEmpty()?undefined:this.stack[this.size()-1]
+       }
+       isEmpty(){
+           return this.size() == 0
+       }
+       size(){
+           return this.stack.length
+       }
+   }
+   
+   
+   </script> 
+
+   <script>
+   // 队列的实现 先进先出 FIFO
+
+   class Queue{
+       constructor(...args){
+           this.queue = [...args]
+       }
+       enqueue(...items){
+           return this.queue.push(...items)
+       }
+       dequeue(){  // 删除第一个元素 并返回 而且改变 原数组
+          return this.queue.shift()   
+       }
+       front(){
+           return this.isEmpty()?undefined:this.queue[0]
+       }
+       back(){
+           return this.isEmpty?undefined:this.queue[this.size()-1]
+       }
+       isEmpty(){
+           return this.size() == 0
+       }
+       size(){
+           return this.queue.length
+       }
+   }
+   
+   // 浏览器的历史记录 因为回退总是回退 上一个 最近的页面,符合 栈的原则。先进先出
+   // HTTP1.1有一个队头阻塞问题，这个原因就在于队列这样的数据结构：我们先看http1.0对于同一个tcp连接,http1.0是将所有请求都放入队列当中,这么一来在客户端 先进先出 只有前一个请求得到响应,下一个请求才会发出。
+   // 在HTTP1.1中这样的情况得到了改观,每个连接都是默认是长连接,因此对于同一个tcp连接,不必等到前一个响应回来,但是这只是客户端的对头阻塞问题,事实上http.1.1规定：服务器的响应返回顺序需要准守其接受到相应的顺序,这样的问题是:如果第一个请求处理需要较长时间，响应较慢,也都会拖累 其他后续请求的响应,这仍然是一个对头阻塞。
+   </script>
+</body>
+</html>

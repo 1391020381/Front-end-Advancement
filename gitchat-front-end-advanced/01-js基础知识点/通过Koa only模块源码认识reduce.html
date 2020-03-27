@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>通过Koa only模块源码认识reduce</title>
+</head>
+<body>
+  <script>
+  // var o = {
+//    a: 'a',
+//    b: 'b',
+//    c: 'c'
+// }
+// only(o, ['a','b'])   // {a: 'a',  b: 'b'}
+
+var only = function (obj,keys) {
+    obj = obj || {}
+    if('string' == typeof keys){
+      keys = keys.split(/ +/)
+    }
+    return keys.reduce(function (ret,key) {
+      if(null == obj[key]) return ret   // key 不在 obj 上
+      ret[key] = obj[key]
+      return ret
+    },{})  // {} 初始值
+  }
+  
+  </script>
+</body>
+</html>
