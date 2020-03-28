@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>如何让你的回调 Promise 化</title>
+</head>
+<body>
+    <p>callback 错误优先的处理方案</p>
+    <p>promise catch</p>
+    <p>try catch  await async</p>
+
+    <p>把老旧的采用回调函数方式的函数,Promise化</p>
+    <p>最简陋的方式就是用一个Promise包装一下,将resolve替换为 callback传给原函数</p>
+    <script>
+    // 是把 使用回调处理异步的方式 改为 Promise
+
+        const promisify = (fn)=>(...args)=> new Promise((resolve,reject)=>{
+            args.push(resolve)
+            fn.apply(this,args)
+        })
+
+        function promisify2 (fn){
+            return function(...args){
+                return new Promise((resolve,reject)=>{
+                    args.push(resolve)
+                    fn.apply(this,args)
+                })
+            }
+        }
+        var testCb = function(a,b,callback){
+            setTimeout(()=>{
+                callback(a+b)
+            },1000)
+        }
+        promisify(testCb)(10,12).then(data=>{
+            console.log("promisify:",data)
+        })
+        promisify2(testCb)(10,12).then(data=>{
+            console.log("promisify2:",data)
+        })
+    </script>
+
+
+
+
+    <script>
+        // 将回调的api 转换为 promise
+       var promisify = (func) => {
+    return function() {
+        var ctx = this;
+        return new Promise((resolve, reject) => {
+            return func.call(ctx, ...arguments, function() {
+                var args = Array.prototype.map.call(arguments, item => item);  // 错误优先
+                var err = args.shift();
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(args);
+                }
+            });
+        })
+    }
+}
+
+    </script>
+</body>
+</html>
