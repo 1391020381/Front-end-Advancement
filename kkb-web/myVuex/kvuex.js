@@ -11,6 +11,12 @@ class Store {
     this.getters = {}
     //doubleCounter(state){}
     const store = this
+
+    // getters: {
+    //   doubleCounter(state) {
+    //     return state.counter * 2
+    //   }
+    // }
     Object.keys(this._wrappedGetters).forEach(key => {
       //获取用户定义的getter
       const fn = store._wrappedGetters[key]
@@ -68,7 +74,7 @@ class Store {
  
 }
  
-function install(_Vue) {
+function install(_Vue) { 
   Vue = _Vue
   Vue.mixin({
     beforeCreate() {
