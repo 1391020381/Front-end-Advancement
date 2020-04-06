@@ -7,5 +7,72 @@
   <title>Promise</title>
 </head>
 <body> 
+  <script>
+    //极简的实现+链式调用+延迟机制+状态
+    class Promise{
+      callbacks = []
+      state = 'pending'
+      value = null
+      constructor(fn){
+        fn(this._resolve.bind(this))
+      }
+      then(onFulfilled){
+        if(this.state === 'pending'){
+          this.callbacks.push(onFulfilled)
+        }else{ // 在 resolve 之后 直接执行回调 返回结果
+          onFulfilled(this.value)
+        }
+        // 但链式调用，只是在 then 方法中 return 了 this，使得 Promise 实例可以多次调用 then 方法，
+        // 但因为是同一个实例，调用再多次 then 也只能返回相同的一个结果
+        return this
+      }
+      _resolve(value){
+        this.state = 'fulfilled'
+        this.value = value
+        this.callbacks.forEach(fn=> fn(value))
+      }
+    }
+  </script>
+
+
+<script>
+  // 完整实现
+class Promise{
+  callbacks = []
+  state = 'pending'
+  value = null
+  constructor(fn){  // new Promise((resolve,reject)) 
+    fn(this._resolve.bind(this))
+  }
+  then(onFulfilled){
+    return new Promise(resolve=>{
+      this._handle({
+        onFulfilled:onFulfilled||null,
+        resolve:resolve
+      })
+    })
+  }
+  _handle(callback){
+    // then 方法传入的形参 onFulfilled 以及创建新 Promise 实例时传入的 resolve 放在一起，
+    // 被push到当前 Promise 的 callbacks 队列中，这是衔接当前 Promise 和后邻 Promise 的关键所在
+    if(this.state === 'pending'){
+      this.callbacks.push(callback)
+      return
+    }
+    // 如果then中没有传递任何东西
+    if(!callback.onFulfilled){
+      callback.resolve(this.value)
+      return
+    }
+    var ret = callback.onFulfilled(this.value) // 当前函数的回调 执行结果
+    callback.resolve(ret) // 第二个返回的 resolve
+  }
+  _resolve(value){
+    this.state = 'fulfilled'
+    this.value  = value
+    this.callbacks.forEach(callback=> this._handle(callback))
+  }
+}
+</script>
 </body>
 </html>
