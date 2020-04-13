@@ -36,30 +36,3 @@ export default context => {
       }, reject)
     })
   }
-
-
-
-
-// export default (context)=>{
-// //    涉及到异步组件
-// return new Promise((resolve,reject)=>{
-//     const {app,router,store} = createApp()
-//     // 返回实例应该跳转的 页面
-//     router.push(context.url)
-//     router.onReady(()=>{
-//       let matchs =   router.getMatchedComponents()
-//         if(matchs.length === 0){
-//             reject({code:404})
-//         }
-//        Promise.all(matchs.map(component=>{
-//         if(component.asyncData){
-//             return component.asyncData(store)
-//         }
-//     })).then(()=>{
-//         // 把 vuex的状态挂载到上下文中
-//         context.state = store.state
-//         resolve(app)
-//     })
-//     },reject)   
-// })
-// }
