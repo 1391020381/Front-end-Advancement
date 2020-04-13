@@ -2,14 +2,14 @@
   <div>
       Foo
 
-      {{this.$store.state.name}}
+      <p>{{this.$store.state.name}}</p>
       <button @click="clickMe">点击</button>
   </div>
 </template>
 
 <script>
 export default {
-  asyncData(store){
+  asyncData({store}){
     console.log('asyncData server')
     return store.dispatch('changeName')
   },

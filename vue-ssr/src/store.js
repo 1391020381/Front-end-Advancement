@@ -1,10 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { reject } from 'async'
 Vue.use(Vuex)
 
 export default (context)=>{
-    const store = new Vuex({
+    const store = new Vuex.Store({
         state:{
             name:''
         },
@@ -25,8 +24,8 @@ export default (context)=>{
         }
     })
     // 如果浏览器执行的时候,我需要将服务器设置的最新状态 替换掉客户端的状态
-    if(typeof window !=='undefined' && window.__INITAL_STATE__){
-        store.replaceState(window.__INITAL_STATE__)
+    if(typeof window !=='undefined' && window.__INITIAL_STATE__){
+        store.replaceState(window.__INITIAL_STATE__)
     }
     return store
 }
