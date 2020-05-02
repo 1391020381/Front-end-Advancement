@@ -1,0 +1,1 @@
+* /usr/local  安装有mysql
