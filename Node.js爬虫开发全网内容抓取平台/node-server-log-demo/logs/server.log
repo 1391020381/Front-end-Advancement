@@ -1,0 +1,5 @@
+[2020-05-03T16:50:05.021] [DEBUG] default - 这是degug日志
+[2020-05-03T16:50:05.029] [INFO] default - 这是info日志
+[2020-05-03T16:50:05.030] [WARN] default - 这是warn日志
+[2020-05-03T16:50:05.030] [ERROR] default - 这是error日志
+[2020-05-03T16:50:05.030] [INFO] default - Server running on port 3000
