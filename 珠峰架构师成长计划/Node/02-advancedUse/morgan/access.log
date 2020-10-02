@@ -1,0 +1,10 @@
+::ffff:127.0.0.1 - GET / HTTP/1.1 200 - - 0.725 ms
+::ffff:127.0.0.1 - GET /favicon.ico HTTP/1.1 200 - - 0.068 ms
+[justdoit]GET/200
+[justdoit]GET/favicon.ico200
+[justdoit]GET/hello?from=app200app
+[justdoit]GET/favicon.ico200-
+[justdoit]GET/hello?from=pc200pc
+[justdoit]GET/favicon.ico200-
+[justdoit]GET/hello?from=app200app
+[justdoit]GET/favicon.ico200-

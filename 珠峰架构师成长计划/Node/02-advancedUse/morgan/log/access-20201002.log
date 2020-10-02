@@ -1,0 +1,2 @@
+::ffff:127.0.0.1 - - [02/Oct/2020:14:49:22 +0000] "GET /hello?from=app HTTP/1.1" 200 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36"
+::ffff:127.0.0.1 - - [02/Oct/2020:14:49:22 +0000] "GET /favicon.ico HTTP/1.1" 200 - "http://127.0.0.1:3000/hello?from=app" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36"
