@@ -14,3 +14,12 @@
     1. 使用Dockerfile定义应用程序的环境
     2. 使用docker-compose.yml定义构成应用程序的服务,这样它们可以隔离环境中一起运行。
     3. 最后 执行 docker-compose up 命令来启动并运行整个应用程序
+
+
+在安装目录 
+启动sentry服务
+docker-compose up -d
+停止所有的容器
+docker stop $(docker ps -aq) 
+
+1391020381@qq.com/123456
